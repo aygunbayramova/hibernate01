@@ -1,17 +1,25 @@
 package com.iktex.models;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+//@Table(uniqueConstraints = {
+//        @UniqueConstraint(name = "UniqueName",columnNames={"name"}),
+//        @UniqueConstraint(name = "UniqueNameAndCode",columnNames={"name","code"})
+//})
 public class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
+    @NaturalId
     private String code;
     private double score;
 

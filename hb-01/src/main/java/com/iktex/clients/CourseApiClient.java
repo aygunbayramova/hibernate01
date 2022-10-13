@@ -2,15 +2,23 @@ package com.iktex.clients;
 
 import com.iktex.models.*;
 import com.iktex.utils.EntityManagerUtils;
+import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class CourseApiClient {
     public static void main(String[] args) {
+        persistDate();
+        find();
+    }
 
-        Student sturent1=new Student("Aygun", LocalDate.of(1986,5,10),"Azerbaijan","Female");
-        Student sturent2=new Student("Sevinc", LocalDate.of(1985,10,8),"Azerbaijan","Female");
+    public static void persistDate(){
+        Student sturent1=new Student("Aygun", LocalDate.of(1986,5,10),"Azerbaijan",Gender.FEMALE, new Date(2000,1,1));
+        Student sturent2=new Student("Sevinc", LocalDate.of(1985,10,8),"Azerbaijan",Gender.FEMALE, new Date());
+        Student sturent3=new Student("Sevinc", LocalDate.of(1985,10,8),"Azerbaijan",Gender.FEMALE, new GregorianCalendar(2022,12,1).getTime());
 
         Course course1=new Course("Hibernate","hb01",9.8);
         Course course2=new Course("Core Java","java",8.0);
@@ -23,6 +31,9 @@ public class CourseApiClient {
 
         course2.getStudentList().add(sturent2);
         sturent2.getCourseList().add(course2);
+
+        course2.getStudentList().add(sturent3);
+        sturent3.getCourseList().add(course2);
 
         Instructor instructor1=new PermamentInstructor("Koray Guney", "Turkey", "0123", 10000);
         Instructor instructor2=new VisitingResearcher("Ali Akin", "Turkey", "4564564", 200);
@@ -55,6 +66,17 @@ public class CourseApiClient {
         } finally {
             EntityManagerUtils.closeEntityManager(em);
         }
+    }
+
+    public static void find(){
+        EntityManager em = EntityManagerUtils.getEntityManager("mysqlPU");
+
+        em.getTransaction().begin();
+        Session session = em.unwrap(Session.class);
+        Course course = session.bySimpleNaturalId(Course.class).load("hb01");
+
+        System.out.println("course="+course);
+        em.getTransaction().commit();
     }
 
 }

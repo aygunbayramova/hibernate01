@@ -3,6 +3,7 @@ package com.iktex.models;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +16,11 @@ public class Student {
     private String name;
     private LocalDate birthDate;
     private String address;
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date birthDate2;
 
     @ManyToMany
     private List<Course> courseList=new ArrayList<>();
@@ -23,11 +28,12 @@ public class Student {
     public Student() {
     }
 
-    public Student(String name, LocalDate birthDate, String address, String gender) {
+    public Student(String name, LocalDate birthDate, String address, Gender gender,Date birthDate2) {
         this.name = name;
         this.birthDate = birthDate;
         this.address = address;
         this.gender = gender;
+        this.birthDate2=birthDate2;
     }
 
     public int getId() {
@@ -62,12 +68,20 @@ public class Student {
         this.address = address;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public Date getBirthDate2() {
+        return birthDate2;
+    }
+
+    public void setBirthDate2(Date birthDate2) {
+        this.birthDate2 = birthDate2;
     }
 
     public List<Course> getCourseList() {
